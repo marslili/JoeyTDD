@@ -1,19 +1,30 @@
 package com.tdd;
 
-public class Budget {
-    private double amount;
-    private String yearMonth;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 
-    public Budget( String yearMonth, double amount) {
+public class Budget {
+    private final double amount;
+    private final String yearMonth;
+
+    public Budget(String yearMonth, double amount) {
         this.amount = amount;
         this.yearMonth = yearMonth;
     }
 
-    public double getAmount() {
-        return amount;
+    double overlappingBudgetAmount(Period targetPeriod) {
+        Period period = new Period(firstDate(), lastDate());
+        return (amount / period.lengthOfMonth()) * period.daysBetween(targetPeriod);
     }
 
-    public String getYearMonth() {
-        return yearMonth;
+    private LocalDate firstDate() {
+        return LocalDate.parse(yearMonth + "01", DateTimeFormatter.ofPattern("yyyyMMdd"));
     }
+
+    private LocalDate lastDate() {
+        return YearMonth.from(firstDate()).atEndOfMonth();
+    }
+
+
 }
